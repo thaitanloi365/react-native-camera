@@ -633,6 +633,19 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
         return new Size(cameraSize.width, cameraSize.height);
     }
 
+    @Override
+    public void focus() {
+        mCamera.cancelAutoFocus();
+        Camera.Parameters params = mCamera.getParameters() ;
+        params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        mCamera.autoFocus(new Camera.AutoFocusCallback() {
+            @Override
+            public void onAutoFocus(boolean success, Camera camera) {
+
+            }
+        });
+    }
+
     /**
      * This rewrites {@link #mCameraId} and {@link #mCameraInfo}.
      */

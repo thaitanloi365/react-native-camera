@@ -762,4 +762,7 @@ public class CameraView extends FrameLayout {
         public void onMountError(CameraView cameraView) {}
     }
 
+    public void focus() {
+        mImpl.focus();
+    }
 }

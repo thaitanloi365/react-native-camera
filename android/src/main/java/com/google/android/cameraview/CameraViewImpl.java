@@ -134,4 +134,5 @@ abstract class CameraViewImpl {
         void onMountError();
     }
 
+    abstract public void focus();
 }

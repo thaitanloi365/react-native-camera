@@ -8,6 +8,9 @@ import android.media.CamcorderProfile;
 import android.media.MediaActionSound;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
+
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.os.AsyncTask;
 import com.facebook.react.bridge.*;
@@ -67,6 +70,9 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   private int mPaddingX;
   private int mPaddingY;
 
+  long mStartTime;
+  static final int MAX_DURATION = 200;
+
   public RNCameraView(ThemedReactContext themedReactContext) {
     super(themedReactContext, true);
     mThemedReactContext = themedReactContext;
@@ -76,6 +82,14 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
       @Override
       public void onCameraOpened(CameraView cameraView) {
         RNCameraViewHelper.emitCameraReadyEvent(cameraView);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            focus();
+          }
+        }, 2000);
       }
 
       @Override
@@ -517,5 +531,22 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     } else {
       return true;
     }
+  }
+
+  @Override
+  public boolean onTouchEvent(MotionEvent event) {
+
+    if (event.getAction() == MotionEvent.ACTION_UP) {
+
+      mStartTime = System.currentTimeMillis();
+    }
+    else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+      if(System.currentTimeMillis() - mStartTime <= MAX_DURATION)
+      {
+        focus();
+      }
+    }
+    return true;
   }
 }
